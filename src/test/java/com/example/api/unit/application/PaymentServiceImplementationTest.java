@@ -1,4 +1,4 @@
-package com.example.api.application;
+package com.example.api.unit.application;
 
 import com.example.api.application.payments.PaymentServiceImplementation;
 import com.example.api.dto.payments.CreatePaymentResponseDto;
