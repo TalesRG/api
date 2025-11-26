@@ -1,12 +1,9 @@
 package com.example.api.dto.payments;
 
-import com.example.api.domain.payment.Item;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Exemplo de JSON para esta classe (CreatePaymentsDto):

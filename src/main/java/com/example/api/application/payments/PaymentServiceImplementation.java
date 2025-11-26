@@ -6,7 +6,11 @@ import com.example.api.entity.PaymentEntity;
 import com.example.api.repository.PaymentRepository;
 import com.example.api.service.payments.PaymentsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PaymentServiceImplementation implements PaymentsService {
@@ -19,6 +23,7 @@ public class PaymentServiceImplementation implements PaymentsService {
     }
 
     @Override
+    @CacheEvict(value = "paymentsAll", allEntries = true)
     public CreatePaymentResponseDto createPayment(CreatePaymentsDto payment) {
         try {
             PaymentEntity paymentEntity = new PaymentEntity();
@@ -39,5 +44,21 @@ public class PaymentServiceImplementation implements PaymentsService {
         }catch (Exception e){
             throw new RuntimeException("Erro ao salvar pagamento", e);
         }
+    }
+
+    @Override
+    @Cacheable(value = "paymentsAll")
+    public List<CreatePaymentResponseDto> getAllPayments() {
+        System.out.println("Buscando no banco (findAll)");
+        return this.paymentRepository.findAll().stream().map(paymentEntity ->
+                CreatePaymentResponseDto.builder()
+                        .id(paymentEntity.getId())
+                        .name(paymentEntity.getName())
+                        .status(paymentEntity.getStatus())
+                        .category(paymentEntity.getCategory())
+                        .paymentMethod(paymentEntity.getPaymentMethod())
+                        .totalValue(paymentEntity.getTotalValue())
+                        .build()
+        ).toList();
     }
 }
